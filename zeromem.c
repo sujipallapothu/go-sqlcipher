@@ -1,6 +1,7 @@
 /* LibTomCrypt, modular cryptographic library -- Tom St Denis */
 /* SPDX-License-Identifier: Unlicense */
 #include "tomcrypt_private.h"
+#include <string.h>
 
 /**
    @file zeromem.c
@@ -14,9 +15,10 @@
 */
 void zeromem(volatile void *out, size_t outlen)
 {
-   volatile char *mem = out;
    LTC_ARGCHKVD(out != NULL);
-   while (outlen-- > 0) {
-      *mem++ = '\0';
-   }
+   memset((void *)out, 0, outlen);
 }
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */
