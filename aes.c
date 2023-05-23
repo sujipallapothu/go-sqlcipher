@@ -1,5 +1,13 @@
-/* LibTomCrypt, modular cryptographic library -- Tom St Denis */
-/* SPDX-License-Identifier: Unlicense */
+/* LibTomCrypt, modular cryptographic library -- Tom St Denis
+ *
+ * LibTomCrypt is a library that provides various cryptographic
+ * algorithms in a highly modular and flexible manner.
+ *
+ * The library is free for all purposes without any express
+ * guarantee it works.
+ *
+ * Tom St Denis, tomstdenis@gmail.com, http://libtom.org
+ */
 
 /**
   @file aes.c
@@ -12,10 +20,10 @@
 
 #include "mbtls_aes.h"
 
-static mbedtls_aes_context ctx_encrypt;
+static __thread mbedtls_aes_context ctx_encrypt;
 
 #ifndef ENCRYPT_ONLY
-static mbedtls_aes_context ctx_decrypt;
+static __thread mbedtls_aes_context ctx_decrypt;
 
 #define SETUP    rijndael_setup
 #define ECB_ENC  rijndael_ecb_encrypt
@@ -134,9 +142,7 @@ int ECB_ENC(const unsigned char *pt, unsigned char *ct, const symmetric_key *ske
 #ifdef LTC_CLEAN_STACK
 int ECB_ENC(const unsigned char *pt, unsigned char *ct, const symmetric_key *skey)
 {
-   int err = s_rijndael_ecb_encrypt(pt, ct, skey);
-   burn_stack(sizeof(unsigned long)*8 + sizeof(unsigned long*) + sizeof(int)*2);
-   return err;
+    return s_rijndael_ecb_encrypt(pt, ct, skey);
 }
 #endif
 
@@ -170,9 +176,7 @@ int ECB_DEC(const unsigned char *ct, unsigned char *pt, const symmetric_key *ske
 #ifdef LTC_CLEAN_STACK
 int ECB_DEC(const unsigned char *ct, unsigned char *pt, const symmetric_key *skey)
 {
-   int err = s_rijndael_ecb_decrypt(ct, pt, skey);
-   burn_stack(sizeof(unsigned long)*8 + sizeof(unsigned long*) + sizeof(int)*2);
-   return err;
+    return s_rijndael_ecb_decrypt(ct, pt, skey);
 }
 #endif
 
